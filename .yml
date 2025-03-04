@@ -5,6 +5,16 @@ on:
     - cron: '1 17 * * *'  # Se ejecuta todos los días a las 17:01 UTC
   workflow_dispatch:  # Permite ejecutar manualmente desde GitHub Actions
 
+env:
+  API_KEY: ${{ secrets.API_KEY }}
+  SF_USER: ${{ secrets.SF_USER }}
+  SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+  SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+  SF_ROLE: ${{ secrets.SF_ROLE }}
+  SF_DATABASE: ${{ secrets.SF_DATABASE }}
+  SF_SCHEMA_CT: ${{ secrets.SF_SCHEMA_CT }}
+  SF_SCHEMA: ${{ secrets.SF_SCHEMA }}
+
 jobs:
   ejecutar_api:
     runs-on: ubuntu-latest
@@ -24,12 +34,12 @@ jobs:
 
       - name: Iniciar API de FastAPI en segundo plano
         run: |
-          uvicorn main:app --host 0.0.0.0 --port 8000 &
+          uvicorn app:app --host 0.0.0.0 --port 8000 &
           sleep 5  # Esperar unos segundos para que la API arranque
 
-      - name: Ejecutar la tarea de clima llamando a la API
-        run: |
-          curl -X GET "http://127.0.0.1:8000/clima?date_start=2024-03-01&date_end=2024-03-03&api_key=${{ secrets.API_KEY }}"
+      # - name: Ejecutar la tarea de clima llamando a la API
+      #   run: |
+      #     curl -X GET "http://127.0.0.1:8000/clima?date_start=2024-03-01&date_end=2024-03-03&api_key=${{ secrets.API_KEY }}"
 
       - name: Mostrar logs de la API (opcional)
         run: |

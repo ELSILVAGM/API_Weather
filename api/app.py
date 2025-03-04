@@ -146,14 +146,15 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 
 app = FastAPI()
 
-# Iniciar el scheduler dentro de la API
-scheduler = BackgroundScheduler()
-scheduler.add_job(ejecutar_clima, 'cron', hour=17, minute=1, timezone=timezone('America/Mexico_City'))
-scheduler.start()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logging.info("API iniciada con tarea programada todos los días a las 10:00.")
+    # Iniciar el scheduler dentro de la API
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(ejecutar_clima, 'cron', hour=17, minute=1, timezone=timezone('America/Mexico_City'))
+    scheduler.start()
     yield
     logging.info("Apagando el Scheduler.")
     scheduler.shutdown()

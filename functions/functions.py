@@ -8,7 +8,7 @@ import logging
 
 # Configuración base para la API de clima
 URL_BASE = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/'
-DEFAULT_API_KEY = obtener_variable_env("DEFAULT_API_KEY")
+API_KEY = obtener_variable_env("API_KEY")
 
 # Obtener coordenadas de regiones desde Snowflake
 def obtener_coordenadas():
@@ -130,7 +130,7 @@ def ejecutar_clima(date_start=None,date_end=None,api_key=None):
             date_end = obtener_fecha_hoy()
         # Usar API Key por defecto si no se proporciona
         if not api_key:
-            api_key = DEFAULT_API_KEY
+            api_key = API_KEY
 
         df_cordenadas = obtener_coordenadas()    
         datos_clima = procesar_filas_paralelamente(df_cordenadas, date_start, date_end, api_key)
