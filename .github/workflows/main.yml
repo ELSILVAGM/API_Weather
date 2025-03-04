@@ -2,7 +2,7 @@ name: Ejecutar API de Clima
 
 on:
   schedule:
-    - cron: '1 17 * * *'  # Se ejecuta todos los días a las 17:01 UTC
+    - cron: '1 15 * * *'  # Se ejecuta todos los días a las 15:01 UTC
   workflow_dispatch:  # Permite ejecutar manualmente desde GitHub Actions
 
 env:
