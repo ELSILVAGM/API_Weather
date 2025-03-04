@@ -1,0 +1,11 @@
+2025-03-03 14:54:34,440 - INFO - Iniciando la API y el Scheduler...
+2025-03-03 14:54:34,555 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-03 14:54:34,555 - INFO - Added job "tarea" to job store "default"
+2025-03-03 14:54:34,555 - INFO - Scheduler started
+2025-03-03 14:54:34,555 - INFO - Scheduler iniciado y tarea programada.
+2025-03-03 14:55:00,023 - INFO - Running job "tarea (trigger: cron[day_of_week='mon', hour='14', minute='55'], next run at: 2025-03-03 14:55:00 CST)" (scheduled at 2025-03-03 14:55:00-06:00)
+2025-03-03 14:55:00,025 - INFO - Tarea ejecutada correctamente
+2025-03-03 14:55:00,025 - INFO - Job "tarea (trigger: cron[day_of_week='mon', hour='14', minute='55'], next run at: 2025-03-10 14:55:00 CST)" executed successfully
+2025-03-03 14:56:56,636 - INFO - Apagando el scheduler...
+2025-03-03 14:56:56,636 - INFO - Scheduler has been shut down
+2025-03-03 14:56:56,636 - INFO - Scheduler apagado correctamente.

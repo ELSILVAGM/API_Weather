@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+pandas = "*"
+requests = "*"
+unidecode = "*"
+sqlalchemy = "*"
+dotenv = "*"
+snowflake-sqlalchemy = "*"
+snowflake-connector-python = {extras = ["pandas"], version = "*"}
+openpyxl = "*"
+apscheduler = "*"
+
+[dev-packages]
+ipykernel = "*"
+
+[requires]
+python_version = "3.12"
