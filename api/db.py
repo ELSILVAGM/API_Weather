@@ -62,10 +62,9 @@ def insertar_sf(df):
         df_existente = pd.read_sql(query_existentes, conn_sql)
         df_existente.columns = df_existente.columns.str.upper()
         df_existente['TMP_ID']= df_existente['TMP_ID'].astype(str)
-        # Convertir registros existentes a un conjunto de tuplas
-        merge = df.merge(df_existente, on=['TMP_ID','PAIS_ID','ESTADO_ID'], how='left', indicator=True)
-        # Filtrar los registros nuevos de forma más rápida
-        df_a_insertar =  merge[merge['_merge']!='both']
+        merge_df = df.merge(df_existente, on=['TMP_ID', 'PAIS_ID', 'ESTADO_ID'], how='left', indicator=True)
+        # Filtrar los registros nuevos de forma más eficiente
+        df_a_insertar = merge_df[merge_df['_merge'] != 'both']
         if not df_a_insertar.empty:
             success, num_chunks, num_rows, output = write_pandas(conn,df_a_insertar,"HIST_CLIMA")  
             if success:

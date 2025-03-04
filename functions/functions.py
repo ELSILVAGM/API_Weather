@@ -123,21 +123,12 @@ def homologar_columnas(df):
 # Función para obtener datos climáticos (se ejecutará diariamente a las 15:00 UTC)
 def ejecutar_clima(date_start=None,date_end=None,api_key=None):
     try:
-        # Usar la fecha actual si no se proporciona
-        if not date_start:
-            date_start = obtener_fecha_hoy()
-        if not date_end:
-            date_end = obtener_fecha_hoy()
-        # Usar API Key por defecto si no se proporciona
-        if not api_key:
-            api_key = API_KEY
-
         df_cordenadas = obtener_coordenadas()    
         datos_clima = procesar_filas_paralelamente(df_cordenadas, date_start, date_end, api_key)
         df_clima = pd.DataFrame(datos_clima)
         data_final = homologar_columnas(df_clima)
         insertar_sf(data_final)
-        data_final = data_final.fillna("N/A")
+        #data_final = data_final.fillna("N/A")
         logging.info("Datos climáticos insertados exitosamente en Snowflake.")
     except Exception as e:
         logging.error(f"Error al obtener datos climáticos: {e}")

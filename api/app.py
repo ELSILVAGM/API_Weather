@@ -170,6 +170,14 @@ def obtener_clima(
     date_end: str = Query(None, description="Fecha de fin en formato YYYY-MM-DD"),
     api_key: str = Query(None, description="Tu API Key para Visual Crossing")
 ):
+    # Usar la fecha actual si no se proporciona
+    if not date_start:
+        date_start = obtener_fecha_hoy()
+    if not date_end:
+        date_end = obtener_fecha_hoy()
+    # Usar API Key por defecto si no se proporciona
+    if not api_key:
+        api_key = API_KEY
     try:
         start_date = datetime.strptime(date_start, "%Y-%m-%d")
         end_date = datetime.strptime(date_end, "%Y-%m-%d")
