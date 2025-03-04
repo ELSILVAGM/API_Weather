@@ -1,0 +1,36 @@
+name: Ejecutar API de Clima
+
+on:
+  schedule:
+    - cron: '1 17 * * *'  # Se ejecuta todos los días a las 17:01 UTC
+  workflow_dispatch:  # Permite ejecutar manualmente desde GitHub Actions
+
+jobs:
+  ejecutar_api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'  # Ajusta según tu versión de Python
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Iniciar API de FastAPI en segundo plano
+        run: |
+          uvicorn main:app --host 0.0.0.0 --port 8000 &
+          sleep 5  # Esperar unos segundos para que la API arranque
+
+      - name: Ejecutar la tarea de clima llamando a la API
+        run: |
+          curl -X GET "http://127.0.0.1:8000/clima?date_start=2024-03-01&date_end=2024-03-03&api_key=${{ secrets.API_KEY }}"
+
+      - name: Mostrar logs de la API (opcional)
+        run: |
+          cat nohup.out || true  # Muestra los logs de la API si existen
