@@ -64,7 +64,7 @@ def insertar_sf(df):
         df_existente['TMP_ID']= df_existente['TMP_ID'].astype(str)
         merge_df = df.merge(df_existente, on=['TMP_ID', 'PAIS_ID', 'ESTADO_ID'], how='left', indicator=True)
         # Filtrar los registros nuevos de forma más eficiente
-        df_a_insertar = merge_df[merge_df['_merge'] != 'both']
+        df_a_insertar = merge_df[merge_df['_merge'] != 'both'].drop('_merge', axis=1)
         if not df_a_insertar.empty:
             success, num_chunks, num_rows, output = write_pandas(conn,df_a_insertar,"HIST_CLIMA")  
             if success:

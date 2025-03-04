@@ -13,7 +13,7 @@ API_KEY = obtener_variable_env("API_KEY")
 # Obtener coordenadas de regiones desde Snowflake
 def obtener_coordenadas():
     conn = get_sqlalchemy_conn()
-    query = "SELECT * FROM  DEV_STG.GNM_CT.CAT_REGIONES_COORDENADAS WHERE PAISID IN (1) AND IDESTADO = 1;"
+    query = "SELECT * FROM  DEV_STG.GNM_CT.CAT_REGIONES_COORDENADAS --WHERE PAISID IN (1) AND IDESTADO = 1;"
     df = pd.read_sql(query, conn)
     conn.close()
     return df
