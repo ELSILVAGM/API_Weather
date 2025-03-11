@@ -36,20 +36,26 @@ jobs:
         run: |
           pipenv run uvicorn --version
 
-      - name: Iniciar API de FastAPI en segundo plano
+      - name: Iniciar API de FastAPI en segundo plano con logs
         run: |
-            cd api  # Entrar al directorio correcto
-            export PYTHONPATH=$PYTHONPATH:$(pwd)  # Asegura que Python busque los módulos en el directorio actual
-            pipenv run uvicorn app:app --host 0.0.0.0 --port 8000 &
-            sleep 5
+          cd api  # Entrar al directorio correcto
+          export PYTHONPATH=$PYTHONPATH:$(pwd)  # Asegura que Python busque los módulos en el directorio actual
+          pipenv run uvicorn app:app --host 0.0.0.0 --port 8000 --log-level debug > nohup.out 2>&1 &
+          sleep 10  # Esperar más tiempo para que la API arranque bien
 
       - name: Probar el endpoint `/clima`
         run: |
-            sleep 5  # Espera unos segundos para asegurarse de que la API esté lista
-            RESPONSE=$(curl -s -o response.json -w "%{http_code}" "http://127.0.0.1:8000/clima?date_start=2025-03-11&date_end=2025-03-11&api_key=${{ secrets.API_KEY }}")
-            cat response.json  # Muestra la respuesta en los logs
-            if [ "$RESPONSE" -ne 200 ]; then exit 1; fi  # Falla el workflow si no es HTTP 200
-      
+          sleep 5  # Espera unos segundos adicionales para asegurarse de que la API esté lista
+          RESPONSE=$(curl -s -o response.json -w "%{http_code}" "http://127.0.0.1:8000/clima")
+          HTTP_STATUS=$(cat response.json | jq -r '.status' 2>/dev/null || echo "unknown")
+          echo "HTTP Status: $HTTP_STATUS"
+          cat response.json  # Muestra la respuesta en los logs
+          if [ "$RESPONSE" -ne 200 ]; then exit 1; fi  # Falla el workflow si no es HTTP 200
+
       - name: Mostrar logs de la API (opcional)
         run: |
-          cat nohup.out || true  # Muestra los logs de la API si existen
+          if [ -f nohup.out ]; then
+            cat nohup.out
+          else
+            echo "No hay logs disponibles"
+          fi
