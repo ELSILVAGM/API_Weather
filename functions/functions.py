@@ -5,6 +5,9 @@ from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from db import get_sqlalchemy_conn, obtener_variable_env, insertar_sf
 import logging
+# Configurar logging para que GitHub Actions lo capture
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
 
 # Configuración base para la API de clima
 URL_BASE = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/'
@@ -124,12 +127,18 @@ def homologar_columnas(df):
 # Función para obtener datos climáticos (se ejecutará diariamente a las 15:00 UTC)
 def ejecutar_clima(date_start=None,date_end=None,api_key=None):
     try:
-        df_cordenadas = obtener_coordenadas()    
+        logging.info(f"Iniciando ejecución de ejecutar_clima con rango {date_start} - {date_end}")
+        df_cordenadas = obtener_coordenadas()
+        logging.info(f"Se obtuvieron {len(df_cordenadas)} coordenadas de regiones.")    
         datos_clima = procesar_filas_paralelamente(df_cordenadas, date_start, date_end, api_key)
+        if not datos_clima:
+            logging.warning("No se encontraron datos climáticos.")
+            return {"message": "No se encontraron datos climáticos."}
         df_clima = pd.DataFrame(datos_clima)
         data_final = homologar_columnas(df_clima)
+        logging.info(f"Datos climáticos transformados correctamente.")
         insertar_sf(data_final)
         #data_final = data_final.fillna("N/A")
         logging.info("Datos climáticos insertados exitosamente en Snowflake.")
     except Exception as e:
-        logging.error(f"Error al obtener datos climáticos: {e}")
+        logging.error(f"Error al obtener datos climáticos: {e}", exc_info=True)
