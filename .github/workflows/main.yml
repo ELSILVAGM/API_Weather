@@ -42,7 +42,14 @@ jobs:
             export PYTHONPATH=$PYTHONPATH:$(pwd)  # Asegura que Python busque los módulos en el directorio actual
             pipenv run uvicorn app:app --host 0.0.0.0 --port 8000 &
             sleep 5
-            
+
+      - name: Probar el endpoint `/clima`
+        run: |
+            sleep 5  # Espera unos segundos para asegurarse de que la API esté lista
+            RESPONSE=$(curl -s -o response.json -w "%{http_code}" "http://127.0.0.1:8000/clima?date_start=2024-03-01&date_end=2024-03-03&api_key=${{ secrets.API_KEY }}")
+            cat response.json  # Muestra la respuesta en los logs
+            if [ "$RESPONSE" -ne 200 ]; then exit 1; fi  # Falla el workflow si no es HTTP 200
+      
       - name: Mostrar logs de la API (opcional)
         run: |
           cat nohup.out || true  # Muestra los logs de la API si existen
