@@ -40,10 +40,6 @@ from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from functions.functions import *
 import logging
-
-
-
-
 from contextlib import asynccontextmanager
 from pytz import timezone
 

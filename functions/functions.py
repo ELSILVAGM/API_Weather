@@ -112,7 +112,8 @@ def homologar_columnas(df):
         "description": "DESCRIPCION",
         "icon": "ICONO",
         "stations": "ESTACIONES",
-        "source": "FUENTE"
+        "source": "FUENTE",
+        "severerisk":"RIESGO_SEVERO"
     }
     # Filtrar solo las columnas que están en el diccionario
     data_final = data_final[list(column_mapping.keys())]
