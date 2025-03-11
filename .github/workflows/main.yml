@@ -46,7 +46,7 @@ jobs:
       - name: Probar el endpoint `/clima`
         run: |
             sleep 5  # Espera unos segundos para asegurarse de que la API esté lista
-            RESPONSE=$(curl -s -o response.json -w "%{http_code}" "http://127.0.0.1:8000/clima?date_start=2024-03-01&date_end=2024-03-02&api_key=${{ secrets.API_KEY }}")
+            RESPONSE=$(curl -s -o response.json -w "%{http_code}" "http://127.0.0.1:8000/clima?date_start=2025-03-11&date_end=2025-03-11&api_key=${{ secrets.API_KEY }}")
             cat response.json  # Muestra la respuesta en los logs
             if [ "$RESPONSE" -ne 200 ]; then exit 1; fi  # Falla el workflow si no es HTTP 200
       
