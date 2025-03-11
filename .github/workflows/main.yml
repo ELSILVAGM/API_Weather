@@ -38,9 +38,11 @@ jobs:
 
       - name: Iniciar API de FastAPI en segundo plano
         run: |
-          pipenv run uvicorn app:app --host 0.0.0.0 --port 8000 &
-          sleep 5  # Esperar unos segundos para que la API arranque
-
+            cd api  # Entrar al directorio correcto
+            export PYTHONPATH=$PYTHONPATH:$(pwd)  # Asegura que Python busque los módulos en el directorio actual
+            pipenv run uvicorn app:app --host 0.0.0.0 --port 8000 &
+            sleep 5
+            
       - name: Mostrar logs de la API (opcional)
         run: |
           cat nohup.out || true  # Muestra los logs de la API si existen
