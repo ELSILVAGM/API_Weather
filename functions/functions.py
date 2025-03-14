@@ -101,6 +101,7 @@ def homologar_columnas(df):
         "windspeed": "VELOCIDAD_VIENTO",
         "winddir": "DIRECCION_VIENTO",
         "pressure": "PRESION",
+        "sealevelpressure": "PRESION",
         "cloudcover": "COBERTURA_NUBOSA",
         "visibility": "VISIBILIDAD",
         "solarradiation": "RADIACION_SOLAR",
@@ -118,9 +119,11 @@ def homologar_columnas(df):
         "source": "FUENTE",
         "severerisk":"RIESGO_SEVERO"
     }
-    # Filtrar solo las columnas que están en el diccionario
-    data_final = data_final[list(column_mapping.keys())]
-    #Renombrar las columnas del DataFrame
+   
+    # Filtrar solo las columnas que existen en el DataFrame
+    columnas_existentes = [col for col in column_mapping.keys() if col in data_final.columns]
+    # Aplicar el filtrado y renombrado solo con las columnas existentes
+    data_final = data_final[columnas_existentes]
     data_final.rename(columns=column_mapping, inplace=True)
     return data_final
 
