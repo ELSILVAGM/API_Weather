@@ -22,8 +22,14 @@ def obtener_coordenadas():
     return df
 
 # Función para obtener la fecha actual en formato YYYY-MM-DD
-def obtener_fecha_hoy():
-    return datetime.today().strftime('%Y-%m-%d')
+def obtener_fecha_ayer():
+    # Obtener la fecha de hoy
+    fecha_hoy = datetime.today()
+    # Restar un día
+    fecha_ayer = fecha_hoy - timedelta(days=1)
+    # Formatear la fecha como 'YYYY-MM-DD'
+    return fecha_ayer.strftime('%Y-%m-%d')
+
 # Función para generar fechas dentro del rango
 def generar_fechas(inicio, fin):
     try:
