@@ -72,9 +72,9 @@ def obtener_clima(
 ):
     # Usar la fecha actual si no se proporciona
     if not date_start:
-        date_start = obtener_fecha_hoy()
+        date_start = obtener_fecha_ayer()
     if not date_end:
-        date_end = obtener_fecha_hoy()
+        date_end = obtener_fecha_ayer()
     # Usar API Key por defecto si no se proporciona
     if not api_key:
         api_key = API_KEY
