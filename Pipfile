@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 fastapi = "*"
 uvicorn = "*"
-pandas = "*"
 requests = "*"
 unidecode = "*"
 sqlalchemy = "*"
@@ -15,6 +14,9 @@ snowflake-sqlalchemy = "*"
 snowflake-connector-python = {extras = ["pandas"], version = "*"}
 openpyxl = "*"
 apscheduler = "*"
+ijson = "*"
+pyarrow = "*"
+pandas = "*"
 
 [dev-packages]
 ipykernel = "*"

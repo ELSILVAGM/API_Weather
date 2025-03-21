@@ -1,6 +1,10 @@
 # Importar librerías
 import pandas as pd
 import requests
+import json
+from pathlib import Path
+import sqlite3
+import ijson
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from db import get_sqlalchemy_conn, obtener_variable_env, insertar_sf
@@ -16,7 +20,7 @@ API_KEY = obtener_variable_env("API_KEY")
 # Obtener coordenadas de regiones desde Snowflake
 def obtener_coordenadas():
     conn = get_sqlalchemy_conn()
-    query = "SELECT * FROM  DEV_STG.GNM_CT.CAT_REGIONES_COORDENADAS --WHERE PAISID IN (1) AND IDESTADO = 1;"
+    query = "SELECT * FROM  PRD_STG.GNM_CT.CAT_REGIONES_COORDENADAS; -- WHERE PAISID IN (1, 15,12, 13) AND IDESTADO IN (1,2,3);"
     df = pd.read_sql(query, conn)
     conn.close()
     return df
@@ -39,8 +43,19 @@ def generar_fechas(inicio, fin):
     except Exception as e:
         print(f"Error al generar fechas: {e}")
         return []
-# Obtener datos climáticos para una fila del DataFrame
 
+
+def guardar_json(nuevos_datos, nombre_archivo="datos.jsonl"):
+    try:
+        # Añadir los nuevos datos al archivo
+        with open(nombre_archivo, mode="a", encoding="utf-8") as archivo:
+            for dato in nuevos_datos:
+                archivo.write(json.dumps(dato) + "\n")
+        print(f"Datos añadidos y guardados en {nombre_archivo}")
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+
+# Obtener datos climáticos para una fila del DataFrame
 def solicitud_APIclima(row, date_start, date_end, api_key):
     try:
         coordenadas = f"{row['latitud']},{row['longitud']}"
@@ -48,8 +63,8 @@ def solicitud_APIclima(row, date_start, date_end, api_key):
         response = requests.get(url)
         response.raise_for_status()
         weather_data = response.json()
-
         dias = weather_data.get('days', [])
+        guardar_json(dias, nombre_archivo=r"C:\Users\elsilva\Documents\FEB\API_Weather\.json\weather_data.json")
         fechas_esperadas = generar_fechas(date_start, date_end)
         dias_procesados = []
 
@@ -133,7 +148,6 @@ def homologar_columnas(df):
     data_final.rename(columns=column_mapping, inplace=True)
     return data_final
 
-# Función para obtener datos climáticos (se ejecutará diariamente a las 15:00 UTC)
 def ejecutar_clima(date_start=None,date_end=None,api_key=None):
     try:
         logging.info(f"Iniciando ejecución de ejecutar_clima con rango {date_start} - {date_end}")
@@ -143,11 +157,11 @@ def ejecutar_clima(date_start=None,date_end=None,api_key=None):
         if not datos_clima:
             logging.warning("No se encontraron datos climáticos.")
             return {"message": "No se encontraron datos climáticos."}
+        guardar_json(datos_clima, nombre_archivo=r"C:\Users\elsilva\Documents\FEB\API_Weather\.json\datos_clima.json")
         df_clima = pd.DataFrame(datos_clima)
         data_final = homologar_columnas(df_clima)
         logging.info(f"Datos climáticos transformados correctamente.")
         insertar_sf(data_final)
-        #data_final = data_final.fillna("N/A")
         logging.info("Datos climáticos insertados exitosamente en Snowflake.")
     except Exception as e:
         logging.error(f"Error al obtener datos climáticos: {e}", exc_info=True)
