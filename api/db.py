@@ -58,7 +58,7 @@ def insertar_sf(df):
     conn_sql = get_sqlalchemy_conn()
     try:
         # Consultar solo los registros existentes en Snowflake
-        query_existentes = f"SELECT TMP_ID, PAIS_ID, ESTADO_ID FROM DEV_STG.GNM.HIST_CLIMA"
+        query_existentes = f"SELECT TMP_ID, PAIS_ID, ESTADO_ID FROM PRD_STG.GNM.HIST_CLIMA"
         df_existente = pd.read_sql(query_existentes, conn_sql)
         df_existente.columns = df_existente.columns.str.upper()
         df_existente['TMP_ID']= df_existente['TMP_ID'].astype(str)
