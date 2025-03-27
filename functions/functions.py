@@ -20,7 +20,7 @@ API_KEY = obtener_variable_env("API_KEY")
 # Obtener coordenadas de regiones desde Snowflake
 def obtener_coordenadas():
     conn = get_sqlalchemy_conn()
-    query = "SELECT * FROM  PRD_STG.GNM_CT.CAT_REGIONES_COORDENADAS; -- WHERE PAISID IN (1, 15,12, 13) AND IDESTADO IN (1,2,3);"
+    query = "SELECT * FROM  PRD_STG.GNM_CT.CAT_REGIONES_COORDENADAS; --WHERE PAISID IN (1, 8) AND IDESTADO IN (1);"
     df = pd.read_sql(query, conn)
     conn.close()
     return df
@@ -73,6 +73,7 @@ def solicitud_APIclima(row, date_start, date_end, api_key):
             if dia_encontrado:
                 dia_encontrado['paisid'] = row['paisid']
                 dia_encontrado['idestado'] = row['idestado']
+                dia_encontrado['id_referencia'] = row['id_referencia']
                 dia_encontrado['TmpID'] = fecha_esperada.replace('-', '')
                 dias_procesados.append(dia_encontrado)
             else:
@@ -138,7 +139,8 @@ def homologar_columnas(df):
         "icon": "ICONO",
         "stations": "ESTACIONES",
         "source": "FUENTE",
-        "severerisk":"RIESGO_SEVERO"
+        "severerisk":"RIESGO_SEVERO",
+        "id_referencia":"ID_REFERENCIA"
     }
    
     # Filtrar solo las columnas que existen en el DataFrame

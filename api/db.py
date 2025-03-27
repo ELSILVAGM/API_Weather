@@ -30,6 +30,7 @@ def get_snowflake_connection():
             schema=SF_SCHEMA
         )
         print("Conexión a Snowflake exitosa.")
+        print(SF_DATABASE)
         return conn
     except DatabaseError as e:
         print(f"Error de conexión a Snowflake: {e}")
@@ -58,11 +59,11 @@ def insertar_sf(df):
     conn_sql = get_sqlalchemy_conn()
     try:
         # Consultar solo los registros existentes en Snowflake
-        query_existentes = f"SELECT TMP_ID, PAIS_ID, ESTADO_ID FROM PRD_STG.GNM.HIST_CLIMA"
+        query_existentes = f"SELECT TMP_ID, PAIS_ID, ESTADO_ID, ID_REFERENCIA FROM PRD_STG.GNM.HIST_CLIMA"
         df_existente = pd.read_sql(query_existentes, conn_sql)
         df_existente.columns = df_existente.columns.str.upper()
         df_existente['TMP_ID']= df_existente['TMP_ID'].astype(str)
-        merge_df = df.merge(df_existente, on=['TMP_ID', 'PAIS_ID', 'ESTADO_ID'], how='left', indicator=True)
+        merge_df = df.merge(df_existente, on=['TMP_ID', 'PAIS_ID', 'ESTADO_ID', 'ID_REFERENCIA'], how='left', indicator=True)
         # Filtrar los registros nuevos de forma más eficiente
         df_a_insertar = merge_df[merge_df['_merge'] != 'both'].drop('_merge', axis=1)
         if not df_a_insertar.empty:
