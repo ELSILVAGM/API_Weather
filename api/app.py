@@ -50,7 +50,7 @@ app = FastAPI()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logging.info("API iniciada con tarea programada todos los días a las 10:00.")
+    logging.info("API iniciada con tarea programada todos los días a las 10:00.😊")
     # Iniciar el scheduler dentro de la API
     scheduler = BackgroundScheduler()
     scheduler.add_job(ejecutar_clima, 'cron', hour=10, minute=1, timezone=timezone('America/Mexico_City'))
