@@ -7,7 +7,7 @@ import sqlite3
 import ijson
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from db import get_sqlalchemy_conn, obtener_variable_env, insertar_sf
+from api.db import get_sqlalchemy_conn, obtener_variable_env, insertar_sf
 import logging
 # Configurar logging para que GitHub Actions lo capture
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
